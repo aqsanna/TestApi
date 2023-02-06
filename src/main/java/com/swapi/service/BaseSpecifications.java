@@ -15,9 +15,9 @@ public class BaseSpecifications {
                 .build();
     }
 
-    public static ResponseSpecification responseSpecOk200() {
+    public static ResponseSpecification responseSpec(Integer code) {
         return new ResponseSpecBuilder()
-                .expectStatusCode(200)
+                .expectStatusCode(code)
                 .build();
     }
 

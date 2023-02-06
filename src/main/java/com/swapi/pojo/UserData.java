@@ -1,16 +1,19 @@
 package com.swapi.pojo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public  class UserData {
     private Integer id;
     private String email;
-    private String first_name;
+    @JsonProperty("first_name")
+    private String firstName;
     private String last_name;
     private String avatar;
 
     public UserData(Integer id, String email, String first_name, String last_name, String avatar) {
         this.id = id;
         this.email = email;
-        this.first_name = first_name;
+        this.firstName = first_name;
         this.last_name = last_name;
         this.avatar = avatar;
     }
@@ -24,7 +27,7 @@ public  class UserData {
     }
 
     public String getFirst_name() {
-        return first_name;
+        return firstName;
     }
 
     public String getLast_name() {

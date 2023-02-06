@@ -8,12 +8,12 @@ import java.util.Properties;
 public class Configurations {
 
     public static final String BASE_URL;
-    public static final String URL;
+    public static final String REQRES_URL;
 
 
     static {
             BASE_URL = getPropValues("url");
-            URL = getPropValues("url2");
+            REQRES_URL = getPropValues("url2");
 
     }
 

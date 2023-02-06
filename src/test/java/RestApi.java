@@ -1,5 +1,5 @@
 
-import com.swapi.service.BaseService;
+import com.swapi.service.MyBaseService;
 import io.restassured.filter.log.LogDetail;
 import org.testng.annotations.Test;
 
@@ -13,7 +13,7 @@ public class RestApi {
     public void getUrl() {
         String basePath = String.format(PEOPLE_URL,1);
 
-        BaseService.get(basePath)
+        MyBaseService.get(basePath)
                 //.prettyPrint()
                 .then()
                 .statusCode(200)

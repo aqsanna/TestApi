@@ -1,29 +1,35 @@
+import com.swapi.helper.UserHelper;
 import com.swapi.pojo.UserData;
-import com.swapi.service.BaseSpecifications;
 import com.swapi.service.UserService;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.swapi.constant.Urls.USER_URL;
-import static com.swapi.utils.Configurations.URL;
-import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.isA;
+import static org.hamcrest.core.Every.everyItem;
 
 public class UserDataTest {
     String basePath = String.format(USER_URL, 2);
 
     @Test
     public void checkAvatarAndId() {
-        UserService userService = new UserService();
-        BaseSpecifications.InstallSpecification(BaseSpecifications.requestSpec(URL), BaseSpecifications.responseSpecOk200());
-        List<UserData> userData = userService.requestGet(basePath);
 
-
+        List<UserData> userData = UserHelper.getUsers(2);
         userData.forEach(x -> Assert.assertTrue(x.getAvatar().contains(x.getId().toString())));
         Assert.assertTrue(userData.stream().allMatch(x -> x.getEmail().endsWith("@reqres.in")));
 
+
+    }
+
+    @Test
+    public void getUsers(){
+        UserService.getUsers(2)
+                .then()
+                .body("data.avatar", everyItem(isA(String.class)),
+                        "data.email", everyItem(endsWith("@reqres.in")));
 
     }
 }

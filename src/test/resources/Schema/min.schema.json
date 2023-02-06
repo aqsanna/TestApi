@@ -1,5 +1,36 @@
 {
-  "$schema": "https://reqres.in/api/users?page=2",
-  "type": "number",
-  "minimum": 1
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "per_page": {
+    "type": "number"
+  },
+  "page": {
+    "type": "number"
+  },
+  "total": {
+    "type": "number"
+  },
+  "total_pages": {
+    "type": "number"
+  },
+  "data": "array",
+  "items": [
+    {
+      "id": {
+        "type": "number"
+      },
+      "email": {
+        "type": "string",
+        "format": "email"
+      },
+      "first_name": {
+        "type": "string"
+      },
+      "last_name": {
+        "type": "string"
+      },
+      "avatar": {
+        "type": "string"
+      }
+    }
+  ]
 }
