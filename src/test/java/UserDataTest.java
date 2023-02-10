@@ -146,4 +146,49 @@ public class UserDataTest {
                 .statusCode(204);
     }
 
+    @Test
+    public void successRegister(){
+        UserService.successRegister(EMAIL, PASSWORD)
+                .then()
+                .log().all()
+                .statusCode(200)
+                .body("id", isA(Integer.class),
+                        "token", isA(String.class));
+    }
+    @Test
+    public void unSuccessRegister(){
+        UserService.unSuccessRegister(EMAIL)
+                .then()
+                .log().all()
+                .statusCode(400);
+    }
+    @Test
+    public void successLogin(){
+        UserService.successLogin("eve.holt@reqres.in", "cityslicka")
+                .then()
+                .log().all()
+                .statusCode(200)
+                .body("token", isA(String.class));
+    }
+    @Test
+    public void unSuccessLogin(){
+        UserService.unSuccessLogin("eve.holt@reqres.in")
+                .then()
+                .log().all()
+                .statusCode(400);
+    }
+    @Test
+    public void getDelayed(){
+        UserService.delayed(3)
+                .then()
+                .log().all()
+                .statusCode(200)
+                .body("data.id", everyItem(isA(Integer.class)),
+                        "data.email", everyItem(endsWith("@reqres.in")),
+                        "data.first_name", everyItem(isA(String.class)),
+                        "data.last_name", everyItem(isA(String.class)),
+                        "data.avatar", everyItem(isA(String.class)));
+    }
+
+
 }

@@ -11,5 +11,5 @@ public class Urls {
     public static final String SINGLE_RESURCES_URL = "/api/unknown/%d";
     public static final String REGISTER_URL = "/api/register";
     public static final String LOGIN_URL = "/api/login";
-    public static final String DELAY_URL = "/api/users?delay=3";
+    public static final String DELAY_URL = "/api/users?delay=%d";
 }
