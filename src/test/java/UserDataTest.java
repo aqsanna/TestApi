@@ -7,10 +7,13 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.swapi.constant.Urls.USER_URL;
 import static com.swapi.utils.UserInfo.*;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Every.everyItem;
 
@@ -152,7 +155,7 @@ public class UserDataTest {
                 .log().all()
                 .statusCode(200)
                 .body("id", isA(Integer.class),
-                        "token", isA(String.class));
+                        "token", isA(String.class)); // chi ashxatum?
     }
 
     @Test
@@ -165,7 +168,7 @@ public class UserDataTest {
 
     @Test
     public void successLogin() {
-        UserService.successLogin("eve.holt@reqres.in", "cityslicka")
+        UserService.successLogin("eve.holt@reqres.in", "cityslicka") // chi ashxatum?
                 .then()
                 .log().all()
                 .statusCode(200)
@@ -193,5 +196,18 @@ public class UserDataTest {
                         "data.avatar", everyItem(isA(String.class)));
     }
 
+
+    @Test
+    public void login(){
+        Map<String,String> login = new HashMap<>();
+        login.put("email", "eve.holt@reqres.in");
+        login.put("password", "cityslicka");
+        given()
+                .contentType("application/json")
+                .body(login)
+                .when().post("https://reqres.in/api/login").then()
+                .body("token",isA(String.class))
+                .statusCode(200);
+    }
 
 }
