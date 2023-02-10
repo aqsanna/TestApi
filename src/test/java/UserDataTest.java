@@ -3,7 +3,6 @@ import com.swapi.helper.UserHelper;
 import com.swapi.pojo.UserData;
 import com.swapi.pojo.UserUpdateResponse;
 import com.swapi.service.UserService;
-import com.swapi.utils.UserInfo;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -58,7 +57,7 @@ public class UserDataTest {
     }
 
     @Test
-    public void getResourceList(){
+    public void getResourceList() {
         UserService.resourceList()
                 .then()
                 .log().all()
@@ -71,7 +70,7 @@ public class UserDataTest {
     }
 
     @Test
-    public void getSingleResource(){
+    public void getSingleResource() {
         UserService.singleResource(USER_ID)
                 .then()
                 .log().all()
@@ -84,7 +83,7 @@ public class UserDataTest {
     }
 
     @Test
-    public void getSingleResourceNotFound(){
+    public void getSingleResourceNotFound() {
         UserService.singleResource(USER_NOT_FOUND_ID)
                 .then()
                 .log().all()
@@ -92,7 +91,7 @@ public class UserDataTest {
     }
 
     @Test
-    public void createUser(){
+    public void createUser() {
         UserService.createUser(FIRST_NAME, JOB)
                 .then()
                 .log().all()
@@ -101,7 +100,7 @@ public class UserDataTest {
     }
 
     @Test
-    public void updateUser(){
+    public void updateUser() {
         String requestBody = "{\n"
                 + "  \"name\": \"morpheus\",\n"
                 + "  \"job\": \"zion resident\"\n"
@@ -116,7 +115,7 @@ public class UserDataTest {
 
 
     @Test
-    public void updateUserByPatch(){
+    public void updateUserByPatch() {
         LocalDate date = LocalDate.now();
 
         String requestBody = "{\n"
@@ -139,7 +138,7 @@ public class UserDataTest {
     }
 
     @Test
-    public void deleteUser(){
+    public void deleteUser() {
         UserService.deleteUser(USER_ID)
                 .then()
                 .log().all()
@@ -147,7 +146,7 @@ public class UserDataTest {
     }
 
     @Test
-    public void successRegister(){
+    public void successRegister() {
         UserService.successRegister(EMAIL, PASSWORD)
                 .then()
                 .log().all()
@@ -155,30 +154,34 @@ public class UserDataTest {
                 .body("id", isA(Integer.class),
                         "token", isA(String.class));
     }
+
     @Test
-    public void unSuccessRegister(){
+    public void unSuccessRegister() {
         UserService.unSuccessRegister(EMAIL)
                 .then()
                 .log().all()
                 .statusCode(400);
     }
+
     @Test
-    public void successLogin(){
+    public void successLogin() {
         UserService.successLogin("eve.holt@reqres.in", "cityslicka")
                 .then()
                 .log().all()
                 .statusCode(200)
                 .body("token", isA(String.class));
     }
+
     @Test
-    public void unSuccessLogin(){
+    public void unSuccessLogin() {
         UserService.unSuccessLogin("eve.holt@reqres.in")
                 .then()
                 .log().all()
                 .statusCode(400);
     }
+
     @Test
-    public void getDelayed(){
+    public void getDelayed() {
         UserService.delayed(3)
                 .then()
                 .log().all()

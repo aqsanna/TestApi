@@ -1,59 +1,57 @@
 package com.swapi.service;
 
-import com.jayway.restassured.module.jsv.JsonSchemaValidator;
 import com.swapi.pojo.UserData;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import io.restassured.specification.ResponseSpecification;
 
 import java.util.List;
 
 import static com.swapi.constant.Urls.*;
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
 
 public class UserService extends BaseService {
-    public List<UserData> userGet(String path){
-        return  given()
+    public List<UserData> userGet(String path) {
+        return given()
                 .when()
-                .get(path )
+                .get(path)
                 .then().log().all()
                 .extract()
                 .body()
                 .jsonPath().getList("userData", UserData.class);
     }
 
-    public static Response getUsers(Integer pageNumber){
+    public static Response getUsers(Integer pageNumber) {
         RequestSpecification requestSpecification = baseConfigRequest();
-        requestSpecification.queryParam("page",pageNumber);
+        requestSpecification.queryParam("page", pageNumber);
         requestSpecification.basePath(USER_LIST_URL);
-        return  get(requestSpecification);
+        return get(requestSpecification);
     }
 
 
-    public static  Response singleUser(Integer id){
+    public static Response singleUser(Integer id) {
         RequestSpecification requestSpecification = baseConfigRequest();
         requestSpecification.basePath(String.format(USER_URL, id));
         return get(requestSpecification);
     }
 
 
-    public static  Response resourceList(){
-        RequestSpecification requestSpecification =baseConfigRequest();
+    public static Response resourceList() {
+        RequestSpecification requestSpecification = baseConfigRequest();
         requestSpecification.basePath(String.format(RESURCES_LIST_URL));
-        return  get(requestSpecification);
+        return get(requestSpecification);
     }
 
-    public static Response singleResource(Integer pageNum){
-        RequestSpecification requestSpecification =baseConfigRequest();
+    public static Response singleResource(Integer pageNum) {
+        RequestSpecification requestSpecification = baseConfigRequest();
         requestSpecification.basePath(String.format(SINGLE_RESURCES_URL, pageNum));
         return get(requestSpecification);
     }
 
-    public static Response createUser(String name, String job){
+    public static Response createUser(String name, String job) {
         RequestSpecification requestSpecification = baseConfigRequest();
         requestSpecification.queryParam("name", name);
         requestSpecification.queryParam("job", job);
-        return  post(requestSpecification, CREATE_USER_URL);
+        return post(requestSpecification, CREATE_USER_URL);
     }
 
     public static Response updateUsers(String requestBody, Integer pageNum) {
@@ -68,35 +66,40 @@ public class UserService extends BaseService {
         return patch(requestSpecification, pageNum);
     }
 
-    public static Response deleteUser(Integer userId){
+    public static Response deleteUser(Integer userId) {
         RequestSpecification requestSpecification = baseConfigRequest();
         return delete(requestSpecification, userId);
     }
-    public static Response successRegister(String email, String password){
-        RequestSpecification requestSpecification =baseConfigRequest();
+
+    public static Response successRegister(String email, String password) {
+        RequestSpecification requestSpecification = baseConfigRequest();
         requestSpecification.queryParam("email", email);
         requestSpecification.queryParam("password", password);
         return post(requestSpecification, REGISTER_URL);
     }
-    public static Response unSuccessRegister(String email){
-        RequestSpecification requestSpecification =baseConfigRequest();
+
+    public static Response unSuccessRegister(String email) {
+        RequestSpecification requestSpecification = baseConfigRequest();
         requestSpecification.queryParam("email", email);
         return post(requestSpecification, REGISTER_URL);
     }
-    public static Response successLogin(String email, String password){
-        RequestSpecification requestSpecification =baseConfigRequest();
+
+    public static Response successLogin(String email, String password) {
+        RequestSpecification requestSpecification = baseConfigRequest();
         requestSpecification.queryParam("email", email);
         requestSpecification.queryParam("password", password);
         return post(requestSpecification, LOGIN_URL);
     }
-    public static Response unSuccessLogin(String email){
+
+    public static Response unSuccessLogin(String email) {
         RequestSpecification requestSpecification = baseConfigRequest();
         requestSpecification.queryParam("email", email);
         return post(requestSpecification, LOGIN_URL);
     }
-    public static Response delayed(Integer id){
-        RequestSpecification requestSpecification=baseConfigRequest();
+
+    public static Response delayed(Integer id) {
+        RequestSpecification requestSpecification = baseConfigRequest();
         requestSpecification.basePath(String.format(DELAY_URL, id));
-        return  get(requestSpecification);
+        return get(requestSpecification);
     }
 }
