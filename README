@@ -1,0 +1,41 @@
+API Testing Project with Java Rest Assured
+This is a simple API testing project that utilizes Java Rest Assured library to perform various tests on an API.
+
+Project Description
+The purpose of this project is to demonstrate the basic functionalities of Java Rest Assured library and how it can be used to test an API. The project includes various test cases that cover different API endpoints and methods.
+
+Getting Started
+Prerequisites
+Before you can use this project, you need to have Java 8 or higher installed on your local machine. You can download Java from the official Java website.
+
+Installing
+Clone this repository to your local machine using git clone <repository-url>
+Import the project into your favorite IDE (e.g. Eclipse, IntelliJ, etc.) as a Maven project.
+Run mvn clean install to download the required dependencies.
+Running the Tests
+To run the tests, simply execute the following command in your terminal:
+
+mvn test
+
+This will run all the test cases and display the results on your console.
+
+Test Cases
+The test cases in this project cover the following scenarios:
+
+[insert brief description of test case 1]
+[insert brief description of test case 2]
+[insert brief description of test case 3]
+...
+N. [insert brief description of test case N]
+You can find the implementation details of each test case in the src/test/java directory.
+
+Contributing
+If you want to contribute to this project, feel free to submit a pull request or open an issue on the GitHub repository.
+
+License
+This project is licensed under the [insert name of license]. You can find the full text of the license in the LICENSE file.
+
+Acknowledgments
+[insert names of individuals or organizations you want to thank for their contributions or support]
+
+Feel free to customize this template to fit your specific needs. Good luck with your API testing project using Java Rest Assured!
