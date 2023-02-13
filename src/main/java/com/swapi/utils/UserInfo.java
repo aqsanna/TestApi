@@ -10,4 +10,6 @@ public class UserInfo {
     public static final Integer USER_NOT_FOUND_ID = 23;
     public static final String SIGLE_RESOURCE_NAME = "fuchsia rose";
 
+
+
 }

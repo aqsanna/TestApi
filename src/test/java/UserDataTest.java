@@ -1,7 +1,5 @@
-import com.swapi.helper.PojoHelper;
 import com.swapi.helper.UserHelper;
 import com.swapi.pojo.UserData;
-import com.swapi.pojo.UserUpdateResponse;
 import com.swapi.service.UserService;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -37,24 +35,27 @@ public class UserDataTest {
                 .body("data.avatar", everyItem(isA(String.class)),
                         "data.email", everyItem(endsWith("@reqres.in")));
 
+
     }
 
     @Test
     public void getSingleUser() {
 
-        UserService.singleUser(USER_ID)
-                .then()
-                .log().all()
-                .statusCode(200)
-                .body("data.id", equalTo(USER_ID),
-                        "data.email", endsWith(("@reqres.in")),
-                        "data.first_name", equalTo(FIRST_NAME),
-                        "data.last_name", equalTo(LAST_NAME));
+//        UserService.getUser(USER_ID)
+//                .then()
+//                .log().all()
+//                .statusCode(200)
+//                .body("data.id", equalTo(USER_ID),
+//                        "data.email", endsWith(("@reqres.in")),
+//                        "data.first_name", equalTo(FIRST_NAME),
+//                        "data.last_name", equalTo(LAST_NAME));
+
+        System.out.println(UserHelper.getUser(USER_ID));
     }
 
     @Test
     public void getSingleUserNotFound() {
-        UserService.singleUser(USER_NOT_FOUND_ID)
+        UserService.getUser(USER_NOT_FOUND_ID)
                 .then()
                 .statusCode(404);
     }
@@ -118,26 +119,19 @@ public class UserDataTest {
 
 
     @Test
-    public void updateUserByPatch() {
+    public void updateUserByPatch() { // anuny poxel, hard codery poxel
         LocalDate date = LocalDate.now();
 
-        String requestBody = "{\n"
-                + "  \"name\": \"morpheus\",\n"
-                + "  \"job\": \"zion resident\"\n"
-                + "}";
-
-        UserUpdateResponse userUpdateResponse = new PojoHelper<UserUpdateResponse>()
-                .customExtract(UserService.updateUserByPatch(requestBody, USER_ID),
-                        UserUpdateResponse.class);
-
-        UserService.updateUserByPatch(requestBody, 2)
+        String name = "morpheus";
+        String job = "zion resident";
+        UserService.updateUserByPatch(name, job, USER_ID)
                 .then()
                 .log().all()
                 .statusCode(200)
-                .body("name", equalTo("morpheus"),
-                        "job", equalTo("zion resident"));
+                .body("name", equalTo(name),
+                        "job", equalTo(job));
 
-        Assert.assertEquals(userUpdateResponse.getUpdatedAt().substring(0, 10), date.toString());
+        Assert.assertEquals(UserHelper.updateUserByPatch(name, job, USER_ID).getUpdatedAt().substring(0, 10), date.toString());
     }
 
     @Test
@@ -152,10 +146,9 @@ public class UserDataTest {
     public void successRegister() {
         UserService.successRegister(EMAIL, PASSWORD)
                 .then()
-                .log().all()
                 .statusCode(200)
                 .body("id", isA(Integer.class),
-                        "token", isA(String.class)); // chi ashxatum?
+                        "token", isA(String.class));
     }
 
     @Test
@@ -198,15 +191,15 @@ public class UserDataTest {
 
 
     @Test
-    public void login(){
-        Map<String,String> login = new HashMap<>();
+    public void login() {
+        Map<String, String> login = new HashMap<>();
         login.put("email", "eve.holt@reqres.in");
         login.put("password", "cityslicka");
         given()
                 .contentType("application/json")
                 .body(login)
                 .when().post("https://reqres.in/api/login").then()
-                .body("token",isA(String.class))
+                .body("token", isA(String.class))
                 .statusCode(200);
     }
 

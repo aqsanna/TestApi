@@ -4,7 +4,9 @@ import com.swapi.pojo.UserData;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.swapi.constant.Urls.*;
 import static io.restassured.RestAssured.given;
@@ -28,7 +30,7 @@ public class UserService extends BaseService {
     }
 
 
-    public static Response singleUser(Integer id) {
+    public static Response getUser(Integer id) {
         RequestSpecification requestSpecification = baseConfigRequest();
         requestSpecification.basePath(String.format(USER_URL, id));
         return get(requestSpecification);
@@ -49,8 +51,10 @@ public class UserService extends BaseService {
 
     public static Response createUser(String name, String job) {
         RequestSpecification requestSpecification = baseConfigRequest();
-        requestSpecification.queryParam("name", name);
-        requestSpecification.queryParam("job", job);
+        Map<String, String> createUser =  new HashMap<>();
+        createUser.put("name", name);
+        createUser.put("job", job);
+        requestSpecification.body(createUser);
         return post(requestSpecification, CREATE_USER_URL);
     }
 
@@ -60,10 +64,13 @@ public class UserService extends BaseService {
         return put(requestSpecification, pageNum);
     }
 
-    public static Response updateUserByPatch(String requestBody, Integer pageNum) {
+    public static Response updateUserByPatch(String name, String job, Integer userId) {
         RequestSpecification requestSpecification = baseConfigRequest();
-        requestSpecification.body(requestBody);
-        return patch(requestSpecification, pageNum);
+        Map<String, String> jsonBody =  new HashMap<>();
+        jsonBody.put("name", name);
+        jsonBody.put("job", job);
+        requestSpecification.body(jsonBody);
+        return patch(requestSpecification, userId);
     }
 
     public static Response deleteUser(Integer userId) {
@@ -73,8 +80,12 @@ public class UserService extends BaseService {
 
     public static Response successRegister(String email, String password) {
         RequestSpecification requestSpecification = baseConfigRequest();
-        requestSpecification.queryParam("email", email);
-        requestSpecification.queryParam("password", password);
+        //requestSpecification.formParam("email", email);
+        //requestSpecification.formParam("password", password);
+        Map<String, String> jsonBody =  new HashMap<>();
+        jsonBody.put("email", email);
+        jsonBody.put("password", password);
+        requestSpecification.body(jsonBody);
         return post(requestSpecification, REGISTER_URL);
     }
 

@@ -1,13 +1,16 @@
 package com.swapi.service;
-
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import io.restassured.config.ObjectMapperConfig;
+
 
 import static com.swapi.constant.Urls.DELETE_USER_URL;
 import static com.swapi.constant.Urls.UPDATE_USER_URL;
 import static com.swapi.utils.Configurations.REQRES_URL;
 import static io.restassured.RestAssured.given;
+import static io.restassured.mapper.ObjectMapperType.GSON;
 
 public class BaseService {
     protected static RequestSpecification baseConfigRequest() {
@@ -17,11 +20,13 @@ public class BaseService {
                 //.config(RestAssured.config()
                 //.objectMapperConfig(new ObjectMapperConfig(GSON)))
                 .urlEncodingEnabled(false)
-                .contentType(ContentType.JSON);
+                .contentType(ContentType.JSON)
+                .log().all();
 
     }
 
     public static Response get(RequestSpecification requestSpecification) {
+        //requestSpecification = baseConfigRequest();
         requestSpecification.log().all();
         return requestSpecification.get();
     }
