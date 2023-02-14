@@ -58,13 +58,16 @@ public class UserService extends BaseService {
         return post(requestSpecification, CREATE_USER_URL);
     }
 
-    public static Response updateUsers(String requestBody, Integer pageNum) {
+    public static Response updateUsers(String name, String job, Integer userId) {
         RequestSpecification requestSpecification = baseConfigRequest();
-        requestSpecification.body(requestBody);
-        return put(requestSpecification, pageNum);
+        Map<String, String> jsonBody = new HashMap<>();
+        jsonBody.put("name", name);
+        jsonBody.put("job", job);
+        requestSpecification.body(jsonBody);
+        return put(requestSpecification, userId);
     }
 
-    public static Response updateUserByPatch(String name, String job, Integer userId) {
+    public static Response updateUserPartial(String name, String job, Integer userId) {
         RequestSpecification requestSpecification = baseConfigRequest();
         Map<String, String> jsonBody =  new HashMap<>();
         jsonBody.put("name", name);
@@ -80,8 +83,6 @@ public class UserService extends BaseService {
 
     public static Response successRegister(String email, String password) {
         RequestSpecification requestSpecification = baseConfigRequest();
-        //requestSpecification.formParam("email", email);
-        //requestSpecification.formParam("password", password);
         Map<String, String> jsonBody =  new HashMap<>();
         jsonBody.put("email", email);
         jsonBody.put("password", password);
@@ -97,8 +98,10 @@ public class UserService extends BaseService {
 
     public static Response successLogin(String email, String password) {
         RequestSpecification requestSpecification = baseConfigRequest();
-        requestSpecification.queryParam("email", email);
-        requestSpecification.queryParam("password", password);
+        Map<String, String> jsonBody =  new HashMap<>();
+        jsonBody.put("email", email);
+        jsonBody.put("password", password);
+        requestSpecification.body(jsonBody);
         return post(requestSpecification, LOGIN_URL);
     }
 

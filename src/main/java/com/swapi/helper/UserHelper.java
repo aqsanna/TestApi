@@ -1,9 +1,6 @@
 package com.swapi.helper;
 
-import com.swapi.pojo.UserCreateResponse;
-import com.swapi.pojo.UserData;
-import com.swapi.pojo.UserResponse;
-import com.swapi.pojo.UserUpdateResponse;
+import com.swapi.pojo.*;
 import com.swapi.service.UserService;
 
 import java.util.List;
@@ -28,8 +25,12 @@ public class UserHelper {
     }
 
 
-    public static UserUpdateResponse updateUserByPatch(String name, String job, Integer pageNum) {
-        return PojoHelper.customExtract(UserService.updateUserByPatch(name, job, pageNum),
+    public static UserUpdateResponse updateUserPartial(String name, String job, Integer pageNum) {
+        return PojoHelper.customExtract(UserService.updateUserPartial(name, job, pageNum),
+                UserUpdateResponse.class);
+    }
+    public static UserUpdateResponse updateUsers(String name, String job, Integer pageNum) {
+        return PojoHelper.customExtract(UserService.updateUsers(name, job, pageNum),
                 UserUpdateResponse.class);
     }
 
@@ -40,5 +41,9 @@ public class UserHelper {
     public static UserResponse getUser(Integer id) {
         return PojoHelper.customExtract(UserService.getUser(id),
                 UserResponse.class);
+    }
+    public static UserRegisterResponse successRegister(String email, String password) {
+        return PojoHelper.customExtract(UserService.successRegister(email, password),
+                UserRegisterResponse.class);
     }
 }
