@@ -3,6 +3,7 @@ import com.swapi.pojo.UserData;
 import com.swapi.service.UserService;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.testng.asserts.Assertion;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -64,7 +65,6 @@ public class UserDataTest {
     public void getResourceList() {
         UserService.resourceList()
                 .then()
-                .log().all()
                 .body("data.id", everyItem(isA(Integer.class)),
                         "data.name", everyItem(isA(String.class)),
                         "data.year", everyItem(isA(Integer.class)),
@@ -77,7 +77,6 @@ public class UserDataTest {
     public void getSingleResource() {
         UserService.singleResource(USER_ID)
                 .then()
-                .log().all()
                 .statusCode(200)
                 .body("data.id", isA(Integer.class),
                         "data.name", equalTo(SIGLE_RESOURCE_NAME),
@@ -90,7 +89,6 @@ public class UserDataTest {
     public void getSingleResourceNotFound() {
         UserService.singleResource(USER_NOT_FOUND_ID)
                 .then()
-                .log().all()
                 .statusCode(404);
     }
 
@@ -98,47 +96,47 @@ public class UserDataTest {
     public void createUser() {
         UserService.createUser(FIRST_NAME, JOB)
                 .then()
-                .log().all()
                 .statusCode(201)
                 .body("id", isA(String.class));
+
+        Assert.assertEquals(UserHelper.createUser(FIRST_NAME, JOB).getName(), FIRST_NAME);
+        Assert.assertEquals(UserHelper.createUser(FIRST_NAME, JOB).getJob(), JOB);
     }
 
     @Test
     public void updateUser() {
-        String requestBody = "{\n"
-                + "  \"name\": \"morpheus\",\n"
-                + "  \"job\": \"zion resident\"\n"
-                + "}";
-        UserService.updateUsers(requestBody, USER_ID)
+        LocalDate date = LocalDate.now();
+        String name = "morpheus";
+        String job = "zion resident";
+        UserService.updateUsers(name, job, USER_ID)
                 .then()
-                .log().all()
                 .statusCode(200)
-                .body("name", equalTo("morpheus"),
-                        "job", equalTo("zion resident"));
+                .body("name", equalTo(name),
+                        "job", equalTo(job));
+        Assert.assertEquals(UserHelper.updateUsers(name, job, USER_ID).getName(), name);
+        Assert.assertEquals(UserHelper.updateUsers(name, job, USER_ID).getJob(), job);
+        Assert.assertEquals(UserHelper.updateUsers(name, job, USER_ID).getUpdatedAt().substring(0, 10), date.toString());
     }
 
 
     @Test
-    public void updateUserByPatch() { // anuny poxel, hard codery poxel
+    public void updateUserPartial() { //  hard codery poxel
         LocalDate date = LocalDate.now();
 
         String name = "morpheus";
         String job = "zion resident";
-        UserService.updateUserByPatch(name, job, USER_ID)
+        UserService.updateUserPartial(name, job, USER_ID)
                 .then()
-                .log().all()
                 .statusCode(200)
                 .body("name", equalTo(name),
                         "job", equalTo(job));
-
-        Assert.assertEquals(UserHelper.updateUserByPatch(name, job, USER_ID).getUpdatedAt().substring(0, 10), date.toString());
+        Assert.assertEquals(UserHelper.updateUserPartial(name, job, USER_ID).getUpdatedAt().substring(0, 10), date.toString());
     }
 
     @Test
     public void deleteUser() {
         UserService.deleteUser(USER_ID)
                 .then()
-                .log().all()
                 .statusCode(204);
     }
 
@@ -149,13 +147,13 @@ public class UserDataTest {
                 .statusCode(200)
                 .body("id", isA(Integer.class),
                         "token", isA(String.class));
+        Assert.assertEquals(UserHelper.successRegister(EMAIL, PASSWORD).getId(), 4);
     }
 
     @Test
     public void unSuccessRegister() {
         UserService.unSuccessRegister(EMAIL)
                 .then()
-                .log().all()
                 .statusCode(400);
     }
 
@@ -163,7 +161,6 @@ public class UserDataTest {
     public void successLogin() {
         UserService.successLogin("eve.holt@reqres.in", "cityslicka") // chi ashxatum?
                 .then()
-                .log().all()
                 .statusCode(200)
                 .body("token", isA(String.class));
     }
@@ -172,7 +169,6 @@ public class UserDataTest {
     public void unSuccessLogin() {
         UserService.unSuccessLogin("eve.holt@reqres.in")
                 .then()
-                .log().all()
                 .statusCode(400);
     }
 
@@ -180,7 +176,6 @@ public class UserDataTest {
     public void getDelayed() {
         UserService.delayed(3)
                 .then()
-                .log().all()
                 .statusCode(200)
                 .body("data.id", everyItem(isA(Integer.class)),
                         "data.email", everyItem(endsWith("@reqres.in")),
