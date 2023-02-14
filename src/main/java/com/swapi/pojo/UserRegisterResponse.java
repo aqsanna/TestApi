@@ -36,7 +36,7 @@ public class UserRegisterResponse {
 
     @Override
     public String toString() {
-        return "UserRegisterResponse{" +
+        return "UserRegisterResponse1{" +
                 "id=" + id +
                 ", token='" + token + '\'' +
                 '}';
