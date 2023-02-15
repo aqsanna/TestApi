@@ -27,13 +27,13 @@ public class UserHelper {
                 UserUpdateResponse.class);
     }
 
-    public static UserUpdateResponse updateUsers(String name, String job, Integer pageNum) {
-        return PojoHelper.customExtract(UserService.updateUsers(name, job, pageNum),
+    public static UserUpdateResponse updateUsers(User user, Integer pageNum) {
+        return PojoHelper.customExtract(UserService.updateUsers(user, pageNum),
                 UserUpdateResponse.class);
     }
 
-    public static UserCreateResponse createUser(String name, String job) {
-        return PojoHelper.customExtract(UserService.createUser(name, job),
+    public static UserCreateResponse createUser(User user) {
+        return PojoHelper.customExtract(UserService.createUser(user),
                 UserCreateResponse.class);
     }
 

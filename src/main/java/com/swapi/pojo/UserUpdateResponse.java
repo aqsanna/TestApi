@@ -1,8 +1,11 @@
 package com.swapi.pojo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class UserUpdateResponse {
-    private String name;
-    private String job;
+    @JsonProperty("user")
+    private User user;
+    @JsonProperty("updatedAt")
     private String updatedAt;
 
     public UserUpdateResponse(String updatedAt) {
@@ -12,26 +15,22 @@ public class UserUpdateResponse {
     }
 
 
-    public String getName() {
-        return name;
+    @JsonProperty("user")
+    public User getUser() {
+        return user;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    @JsonProperty("user")
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public String getJob() {
-        return job;
-    }
-
-    public void setJob(String job) {
-        this.job = job;
-    }
-
+    @JsonProperty("updatedAt")
     public String getUpdatedAt() {
         return updatedAt;
     }
 
+    @JsonProperty("updatedAt")
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }

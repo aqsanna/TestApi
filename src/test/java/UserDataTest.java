@@ -1,4 +1,5 @@
 import com.swapi.helper.UserHelper;
+import com.swapi.pojo.User;
 import com.swapi.pojo.UserData;
 import com.swapi.service.UserService;
 import org.testng.Assert;
@@ -94,28 +95,30 @@ public class UserDataTest {
 
     @Test
     public void createUser() {
-        UserService.createUser(FIRST_NAME, JOB)
+        User user = new User( FIRST_NAME, JOB);
+        UserService.createUser(user)
                 .then()
                 .statusCode(201)
                 .body("id", isA(String.class));
 
-        Assert.assertEquals(UserHelper.createUser(FIRST_NAME, JOB).getName(), FIRST_NAME);
-        Assert.assertEquals(UserHelper.createUser(FIRST_NAME, JOB).getJob(), JOB);
+        Assert.assertEquals(UserHelper.createUser(user).getUser().getName(), FIRST_NAME);  // chi ashxatum
+        Assert.assertEquals(UserHelper.createUser(user).getUser().getJob(), JOB);
     }
 
     @Test
     public void updateUser() {
         LocalDate date = LocalDate.now();
+        User user = new User( "morpheus", "zion resident");
         String name = "morpheus";
         String job = "zion resident";
-        UserService.updateUsers(name, job, USER_ID)
+        UserService.updateUsers(user, USER_ID)
                 .then()
                 .statusCode(200)
                 .body("name", equalTo(name),
                         "job", equalTo(job));
-        Assert.assertEquals(UserHelper.updateUsers(name, job, USER_ID).getName(), name);
-        Assert.assertEquals(UserHelper.updateUsers(name, job, USER_ID).getJob(), job);
-        Assert.assertEquals(UserHelper.updateUsers(name, job, USER_ID).getUpdatedAt().substring(0, 10), date.toString());
+        Assert.assertEquals(UserHelper.updateUsers(user, USER_ID).getUser().getName(), user.getName());
+        Assert.assertEquals(UserHelper.updateUsers(user, USER_ID).getUser().getJob(), user.getJob());
+        Assert.assertEquals(UserHelper.updateUsers(user, USER_ID).getUpdatedAt().substring(0, 10), date.toString());
     }
 
 

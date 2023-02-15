@@ -1,14 +1,17 @@
 package com.swapi.pojo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class UserCreateResponse {
-    private String name;
-    private String job;
+    @JsonProperty("user")
+    private User user;
+    @JsonProperty("id")
     private String id;
+    @JsonProperty("createdAt")
     private String createdAt;
 
-    public UserCreateResponse(String name, String job, String id, String createdAt) {
-        this.name = name;
-        this.job = job;
+    public UserCreateResponse(User user,  String id, String createdAt) {
+        this.user = user;
         this.id = id;
         this.createdAt = createdAt;
     }
@@ -16,39 +19,36 @@ public class UserCreateResponse {
     public UserCreateResponse() {
     }
 
+    @JsonProperty("id")
     public String getId() {
         return id;
     }
 
+    @JsonProperty("createdAt")
     public String getCreatedAt() {
         return createdAt;
     }
 
+    @JsonProperty("id")
     public UserCreateResponse setId(String id) {
         this.id = id;
         return this;
     }
 
+    @JsonProperty("createdAt")
     public UserCreateResponse setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
         return this;
     }
 
-    public String getName() {
-        return name;
+    @JsonProperty("user")
+    public User getUser() {
+        return user;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    @JsonProperty("user")
+    public void setUser(User user) {
+        this.user = user;
     }
-
-    public String getJob() {
-        return job;
-    }
-
-    public void setJob(String job) {
-        this.job = job;
-    }
-
 
 }
