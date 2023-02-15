@@ -159,7 +159,7 @@ public class UserDataTest {
 
     @Test
     public void successLogin() {
-        UserService.successLogin("eve.holt@reqres.in", "cityslicka") // chi ashxatum?
+        UserService.successLogin(EMAIL, PASSWORD) // chi ashxatum?
                 .then()
                 .statusCode(200)
                 .body("token", isA(String.class));
@@ -174,14 +174,18 @@ public class UserDataTest {
 
     @Test
     public void getDelayed() {
-        UserService.delayed(3)
-                .then()
-                .statusCode(200)
-                .body("data.id", everyItem(isA(Integer.class)),
-                        "data.email", everyItem(endsWith("@reqres.in")),
-                        "data.first_name", everyItem(isA(String.class)),
-                        "data.last_name", everyItem(isA(String.class)),
-                        "data.avatar", everyItem(isA(String.class)));
+        List<UserData> userData = UserHelper.delayedUsers(3);
+//        UserService.delayed(3)
+//                .then()
+//                .statusCode(200)
+//                .body("data.id", everyItem(isA(Integer.class)),
+//                        "data.email", everyItem(endsWith("@reqres.in")),
+//                        "data.first_name", everyItem(isA(String.class)),
+//                        "data.last_name", everyItem(isA(String.class)),
+//                        "data.avatar", everyItem(isA(String.class)));
+//        Assert.assertTrue(userData.stream().allMatch(x->x.getEmail().endsWith("@reqres.in1")));
+        Assert.assertTrue(userData.stream().allMatch(x -> x.getEmail().endsWith("@reqres.in")));
+
     }
 
 

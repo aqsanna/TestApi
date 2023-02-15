@@ -46,4 +46,11 @@ public class UserHelper {
         return PojoHelper.customExtract(UserService.successRegister(email, password),
                 UserRegisterResponse.class);
     }
+    public static UserLoginResponse successLogin(String email, String password) {
+        return PojoHelper.customExtract(UserService.successLogin(email, password),
+                UserLoginResponse.class);
+    }
+    public static List<UserData> delayedUsers(Integer id) {
+        return customExtract(UserService.delayed(id), "userData", UserData.class);
+    }
 }
