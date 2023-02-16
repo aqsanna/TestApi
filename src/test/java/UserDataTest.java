@@ -1,7 +1,10 @@
 import com.swapi.helper.UserHelper;
 import com.swapi.pojo.User;
+import com.swapi.pojo.UserCreateResponse;
 import com.swapi.pojo.UserData;
+import com.swapi.pojo.UserResponse;
 import com.swapi.service.UserService;
+import com.swapi.utils.RandomString;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.asserts.Assertion;
@@ -27,31 +30,48 @@ public class UserDataTest {
         userData.forEach(x -> Assert.assertTrue(x.getAvatar().contains(x.getId().toString())));
         Assert.assertTrue(userData.stream().allMatch(x -> x.getEmail().endsWith("@reqres.in")));
 
-
     }
 
     @Test
     public void getUsers() {
         UserService.getUsers(2)
                 .then()
-                .body("data.avatar", everyItem(isA(String.class)),
-                        "data.email", everyItem(endsWith("@reqres.in")));
+                .statusCode(200)
+                .body(
+                        "data.id", everyItem(isA(Integer.class)),
+                        "data.email", everyItem(endsWith("@reqres.in")),
+                        "data.firstName", everyItem(isA(String.class)),
+                        "data.lastName", everyItem(isA(String.class)),
+                        "data.avatar", everyItem(isA(String.class)));
 
+    }
+    @Test
+    public void getUsersListWithPojo() {
+        List<UserData> userDataList = UserHelper.getUsers(2);
+
+        for (int i = 0; i < userDataList.size(); i++) {
+            System.out.println(userDataList.get(i));
+        }
+        userDataList.forEach(x -> Assert.assertEquals(x.getId().getClass(), Integer.class));
+        userDataList.forEach(x -> Assert.assertTrue(x.getEmail().contains("@reqres.in")));
+        userDataList.forEach(x -> Assert.assertEquals(x.getFirstName().getClass(), String.class));
+        userDataList.forEach(x -> Assert.assertEquals(x.getLastName().getClass(), String.class));
+        userDataList.forEach(x -> Assert.assertTrue(x.getAvatar().contains(x.getId().toString())));
 
     }
 
     @Test
     public void getSingleUser() {
 
-//        UserService.getUser(USER_ID)
-//                .then()
-//                .log().all()
-//                .statusCode(200)
-//                .body("data.id", equalTo(USER_ID),
-//                        "data.email", endsWith(("@reqres.in")),
-//                        "data.first_name", equalTo(FIRST_NAME),
-//                        "data.last_name", equalTo(LAST_NAME));
+        Integer userID = 2;
 
+        UserService.getUsers(userID)
+                .then()
+                .statusCode(200)
+                .body("data.id", equalTo(userID),
+                        "data.email", endsWith("@reqres.in"),
+                        "data.first_name", isA(String.class),
+                        "data.last_name", isA(String.class));
         System.out.println(UserHelper.getUser(USER_ID));
     }
 
@@ -96,13 +116,26 @@ public class UserDataTest {
     @Test
     public void createUser() {
         User user = new User( FIRST_NAME, JOB);
+//        UserService.createUser(user)
+//                .then()
+//                .statusCode(201)
+//                .body("id", isA(String.class));
+//
+//        Assert.assertEquals(UserHelper.createUser(user).getUser().getName(), FIRST_NAME);  // chi ashxatum
+//        Assert.assertEquals(UserHelper.createUser(user).getUser().getJob(), JOB);
+
+        String name = RandomString.getAlphabeticString(10);
+        String job = "leader";
         UserService.createUser(user)
                 .then()
                 .statusCode(201)
                 .body("id", isA(String.class));
+        UserCreateResponse userCreateResponse = UserHelper.createUser(user);
+        UserResponse userResponse = UserHelper.getUser(Integer.valueOf(userCreateResponse.getId()));
 
-        Assert.assertEquals(UserHelper.createUser(user).getUser().getName(), FIRST_NAME);  // chi ashxatum
-        Assert.assertEquals(UserHelper.createUser(user).getUser().getJob(), JOB);
+        Assert.assertEquals(userResponse.getData().getFirstName(), name);
+
+        UserService.deleteUser(Integer.valueOf(userCreateResponse.getId()));
     }
 
     @Test
@@ -119,6 +152,23 @@ public class UserDataTest {
         Assert.assertEquals(UserHelper.updateUsers(user, USER_ID).getUser().getName(), user.getName());
         Assert.assertEquals(UserHelper.updateUsers(user, USER_ID).getUser().getJob(), user.getJob());
         Assert.assertEquals(UserHelper.updateUsers(user, USER_ID).getUpdatedAt().substring(0, 10), date.toString());
+
+        UserCreateResponse userCreateResponse = UserHelper.createUser(user);
+
+//        String name = userCreateResponse.getName();
+//        String job = "zion resident";
+        Integer userID = Integer.valueOf(userCreateResponse.getId());
+
+        UserService.updateUsers(user, userID)
+                .then()
+                .statusCode(200);
+
+        UserResponse userResponse = UserHelper.getUser(userID);
+
+        Assert.assertEquals(userResponse.getData().getFirstName(), name);
+        Assert.assertEquals(userResponse.getData().getId(), userID);
+
+        UserService.deleteUser(Integer.valueOf(userCreateResponse.getId()));
     }
 
 
@@ -134,13 +184,42 @@ public class UserDataTest {
                 .body("name", equalTo(name),
                         "job", equalTo(job));
         Assert.assertEquals(UserHelper.updateUserPartial(name, job, USER_ID).getUpdatedAt().substring(0, 10), date.toString());
+
+
+        //LocalDate date = LocalDate.now();
+
+        User user = new User( "morpheus", "zion resident");
+        UserCreateResponse userCreateResponse = UserHelper.createUser(user);
+
+//        String name = userCreateResponse.getName();
+//        String job = "zion resident";
+        Integer userID = Integer.valueOf(userCreateResponse.getId());
+
+        UserService.updateUserPartial(name, job, userID)
+                .then()
+                .statusCode(200);
+
+        UserResponse userResponse = UserHelper.getUser(userID);
+
+        Assert.assertEquals(userResponse.getData().getFirstName(), name);
+        Assert.assertEquals(userResponse.getData().getId(), userID);
+        Assert.assertEquals(UserHelper.updateUserPartial(name, job, userID).getUpdatedAt().substring(0, 10), date.toString());
+        UserService.deleteUser(Integer.valueOf(userCreateResponse.getId()));
     }
 
     @Test
     public void deleteUser() {
-        UserService.deleteUser(USER_ID)
+        User user = new User( "morpheus", "zion resident");
+        UserCreateResponse userCreateResponse = UserHelper.createUser(user);
+        int userID = Integer.parseInt(userCreateResponse.getId());
+
+        UserService.deleteUser(userID)
                 .then()
                 .statusCode(204);
+
+        UserService.getUser(userID)
+                .then()
+                .statusCode(404);
     }
 
     @Test

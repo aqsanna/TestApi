@@ -24,9 +24,12 @@ public class UserService extends BaseService {
     }
 
     public static Response getUsers(Integer pageNumber) {
+//        RequestSpecification requestSpecification = baseConfigRequest();
+//        requestSpecification.queryParam("page", pageNumber);
+//        requestSpecification.basePath(USER_LIST_URL);
+//        return get(requestSpecification);
         RequestSpecification requestSpecification = baseConfigRequest();
-        requestSpecification.queryParam("page", pageNumber);
-        requestSpecification.basePath(USER_LIST_URL);
+        requestSpecification.basePath(String.format(USER_LIST_URL, pageNumber));
         return get(requestSpecification);
     }
 

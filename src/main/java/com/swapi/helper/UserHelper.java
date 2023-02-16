@@ -13,12 +13,8 @@ public class UserHelper {
     };
 
     public static List<UserData> getUsers(Integer pageNumber) {
-//        return UserService.getUsers(pageNumber)
-//                .then()
-//                .extract()
-//                .body()
-//                .jsonPath().getList("userData", UserData.class);
-        return customExtract(UserService.getUsers(pageNumber), "userData", UserData.class);
+        UserListResponse userListResponse = customExtract(UserService.getUsers(pageNumber),  UserListResponse.class);
+        return userListResponse.getUserDataList();
     }
 
 
@@ -51,6 +47,7 @@ public class UserHelper {
                 UserLoginResponse.class);
     }
     public static List<UserData> delayedUsers(Integer id) {
-        return customExtract(UserService.delayed(id), "userData", UserData.class);
+        UserListResponse userListResponse = customExtract(UserService.delayed(id),  UserListResponse.class);
+        return userListResponse.getUserDataList();
     }
 }
