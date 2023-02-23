@@ -1,6 +1,5 @@
 package com.swapi.service;
 
-import com.swapi.pojo.User;
 import com.swapi.pojo.UserData;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -24,10 +23,6 @@ public class UserService extends BaseService {
     }
 
     public static Response getUsers(Integer pageNumber) {
-//        RequestSpecification requestSpecification = baseConfigRequest();
-//        requestSpecification.queryParam("page", pageNumber);
-//        requestSpecification.basePath(USER_LIST_URL);
-//        return get(requestSpecification);
         RequestSpecification requestSpecification = baseConfigRequest();
         requestSpecification.basePath(String.format(USER_LIST_URL, pageNumber));
         return get(requestSpecification);
@@ -53,24 +48,22 @@ public class UserService extends BaseService {
         return get(requestSpecification);
     }
 
-    public static Response createUser(User user) {
+    public static Response createUser(String name, String job) {
         RequestSpecification requestSpecification = baseConfigRequest();
-//        Map<String, String> createUser =  new HashMap<>();
-//        createUser.put("name", name);
-//        createUser.put("job", job);
-        Map<String, User> createUser =  new HashMap<>();
-        createUser.put("user", user);
+        Map<String, String> createUser =  new HashMap<>();
+        createUser.put("name", name);
+        createUser.put("job", job);
         requestSpecification.body(createUser);
         return post(requestSpecification, CREATE_USER_URL);
     }
 
-    public static Response updateUsers(User user, Integer userId) {
+    public static Response updateUsers(String name, String job, Integer pageNum) {
         RequestSpecification requestSpecification = baseConfigRequest();
-        Map<String, User> jsonBody = new HashMap<>();
-        jsonBody.put("user", user);
-      //  jsonBody.put("job", job);
+        Map<String, String> jsonBody = new HashMap<>();
+        jsonBody.put("name", name);
+        jsonBody.put("job", job);
         requestSpecification.body(jsonBody);
-        return put(requestSpecification, userId);
+        return put(requestSpecification, pageNum);
     }
 
     public static Response updateUserPartial(String name, String job, Integer userId) {

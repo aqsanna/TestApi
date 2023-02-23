@@ -1,5 +1,4 @@
 import com.swapi.helper.UserHelper;
-import com.swapi.pojo.User;
 import com.swapi.pojo.UserCreateResponse;
 import com.swapi.pojo.UserData;
 import com.swapi.pojo.UserResponse;
@@ -7,7 +6,6 @@ import com.swapi.service.UserService;
 import com.swapi.utils.RandomString;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.testng.asserts.Assertion;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -45,6 +43,7 @@ public class UserDataTest {
                         "data.avatar", everyItem(isA(String.class)));
 
     }
+
     @Test
     public void getUsersListWithPojo() {
         List<UserData> userDataList = UserHelper.getUsers(2);
@@ -65,7 +64,7 @@ public class UserDataTest {
 
         Integer userID = 2;
 
-        UserService.getUsers(userID)
+        UserService.getUser(userID)
                 .then()
                 .statusCode(200)
                 .body("data.id", equalTo(userID),
@@ -115,22 +114,14 @@ public class UserDataTest {
 
     @Test
     public void createUser() {
-        User user = new User( FIRST_NAME, JOB);
-//        UserService.createUser(user)
-//                .then()
-//                .statusCode(201)
-//                .body("id", isA(String.class));
-//
-//        Assert.assertEquals(UserHelper.createUser(user).getUser().getName(), FIRST_NAME);  // chi ashxatum
-//        Assert.assertEquals(UserHelper.createUser(user).getUser().getJob(), JOB);
 
         String name = RandomString.getAlphabeticString(10);
         String job = "leader";
-        UserService.createUser(user)
+        UserService.createUser(name, job)
                 .then()
                 .statusCode(201)
                 .body("id", isA(String.class));
-        UserCreateResponse userCreateResponse = UserHelper.createUser(user);
+        UserCreateResponse userCreateResponse = UserHelper.createUser(name, job);
         UserResponse userResponse = UserHelper.getUser(Integer.valueOf(userCreateResponse.getId()));
 
         Assert.assertEquals(userResponse.getData().getFirstName(), name);
@@ -141,25 +132,19 @@ public class UserDataTest {
     @Test
     public void updateUser() {
         LocalDate date = LocalDate.now();
-        User user = new User( "morpheus", "zion resident");
         String name = "morpheus";
         String job = "zion resident";
-        UserService.updateUsers(user, USER_ID)
+        UserService.updateUsers(name, job, USER_ID)
                 .then()
                 .statusCode(200)
                 .body("name", equalTo(name),
                         "job", equalTo(job));
-        Assert.assertEquals(UserHelper.updateUsers(user, USER_ID).getUser().getName(), user.getName());
-        Assert.assertEquals(UserHelper.updateUsers(user, USER_ID).getUser().getJob(), user.getJob());
-        Assert.assertEquals(UserHelper.updateUsers(user, USER_ID).getUpdatedAt().substring(0, 10), date.toString());
+        Assert.assertEquals(UserHelper.updateUsers(name, job, USER_ID).getUpdatedAt().substring(0, 10), date.toString());
 
-        UserCreateResponse userCreateResponse = UserHelper.createUser(user);
-
-//        String name = userCreateResponse.getName();
-//        String job = "zion resident";
+        UserCreateResponse userCreateResponse = UserHelper.createUser(name, job);
         Integer userID = Integer.valueOf(userCreateResponse.getId());
 
-        UserService.updateUsers(user, userID)
+        UserService.updateUsers(name, job, userID)
                 .then()
                 .statusCode(200);
 
@@ -175,42 +160,24 @@ public class UserDataTest {
     @Test
     public void updateUserPartial() { //  hard codery poxel
         LocalDate date = LocalDate.now();
+        UserCreateResponse userCreateResponse = UserHelper.createUser(RandomString.getAlphanumericString(10), "leader");
 
-        String name = "morpheus";
+        String name = userCreateResponse.getName();
         String job = "zion resident";
         UserService.updateUserPartial(name, job, USER_ID)
                 .then()
-                .statusCode(200)
-                .body("name", equalTo(name),
-                        "job", equalTo(job));
+                .statusCode(200);
+        UserResponse userResponse = UserHelper.getUser(USER_ID);
+        Assert.assertEquals(userResponse.getData().getFirstName(), name);
+        Assert.assertEquals(userResponse.getData().getId(), USER_ID);
         Assert.assertEquals(UserHelper.updateUserPartial(name, job, USER_ID).getUpdatedAt().substring(0, 10), date.toString());
-
-
         //LocalDate date = LocalDate.now();
 
-        User user = new User( "morpheus", "zion resident");
-        UserCreateResponse userCreateResponse = UserHelper.createUser(user);
-
-//        String name = userCreateResponse.getName();
-//        String job = "zion resident";
-        Integer userID = Integer.valueOf(userCreateResponse.getId());
-
-        UserService.updateUserPartial(name, job, userID)
-                .then()
-                .statusCode(200);
-
-        UserResponse userResponse = UserHelper.getUser(userID);
-
-        Assert.assertEquals(userResponse.getData().getFirstName(), name);
-        Assert.assertEquals(userResponse.getData().getId(), userID);
-        Assert.assertEquals(UserHelper.updateUserPartial(name, job, userID).getUpdatedAt().substring(0, 10), date.toString());
-        UserService.deleteUser(Integer.valueOf(userCreateResponse.getId()));
     }
 
     @Test
     public void deleteUser() {
-        User user = new User( "morpheus", "zion resident");
-        UserCreateResponse userCreateResponse = UserHelper.createUser(user);
+        UserCreateResponse userCreateResponse = UserHelper.createUser(RandomString.getAlphanumericString(10), "leader");
         int userID = Integer.parseInt(userCreateResponse.getId());
 
         UserService.deleteUser(userID)

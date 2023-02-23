@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UserCreateResponse {
 
-    private User user;
+    private String name;
+    private String job;
     private String id;
     private String createdAt;
 
-    public UserCreateResponse(User user,  String id, String createdAt) {
-        this.user = user;
+    public UserCreateResponse(String name, String job, String id, String createdAt) {
+        this.name = name;
+        this.job = job;
         this.id = id;
         this.createdAt = createdAt;
     }
@@ -21,11 +23,9 @@ public class UserCreateResponse {
         return id;
     }
 
-
     public String getCreatedAt() {
         return createdAt;
     }
-
 
     public UserCreateResponse setId(String id) {
         this.id = id;
@@ -37,12 +37,20 @@ public class UserCreateResponse {
         return this;
     }
 
-    public User getUser() {
-        return user;
+    public String getName() {
+        return name;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
     }
 
 }
